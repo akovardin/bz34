@@ -59,10 +59,7 @@ func main() {
 		case "debug":
 			debug = !debug
 		case "dump":
-			fmt.Println("registers: x =", x, "y =", y)
-			for k, v := range r {
-				fmt.Println("register:", k, "=", v)
-			}
+			dump()
 		case "cx":
 			println("clear")
 			x = 0
@@ -122,4 +119,23 @@ func println(args ...interface{}) {
 	if debug {
 		fmt.Println(args...)
 	}
+}
+
+func dump() {
+	fmt.Println("x =", x)
+	fmt.Println("y =", y, "\n")
+	fmt.Println("0 =", r["0"])
+	fmt.Println("1 =", r["1"])
+	fmt.Println("2 =", r["2"])
+	fmt.Println("3 =", r["3"])
+	fmt.Println("4 =", r["4"])
+	fmt.Println("5 =", r["5"])
+	fmt.Println("6 =", r["6"])
+	fmt.Println("7 =", r["7"])
+	fmt.Println("8 =", r["8"])
+	fmt.Println("9 =", r["9"])
+	fmt.Println("A =", r["A"])
+	fmt.Println("B =", r["B"])
+	fmt.Println("C =", r["C"])
+	fmt.Println("D =", r["D"])
 }
