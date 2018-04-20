@@ -1,18 +1,22 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
-	"strings"
-	"strconv"
-	"bufio"
 	"os"
+	"strings"
 )
 
 var (
-	// рабочие регистры
-	x float64
-	y float64
+	x float64 // текущий регистр
+	y float64 // рабочий регистр
+	// стековые регистры
+	z float64
+	t float64
+
+	// регистр предыдущего результата
+	x1 float64
 
 	// регистры общего назначеия
 	r = map[string]float64{
@@ -32,7 +36,7 @@ var (
 		"D": 0,
 	}
 
-	debug = true
+	d = true
 )
 
 func init() {
@@ -50,92 +54,18 @@ func main() {
 		}
 
 		input = strings.Trim(input, "\n")
-
 		if input == "" {
 			continue
 		}
 
-		switch input {
-		case "debug":
-			debug = !debug
-		case "dump":
-			dump()
-		case "cx":
-			println("clear")
-			x = 0
-		case "<>":
-			println("swap register x(", x, ") and register y(", y, ")")
-			x, y = y, x
-		case "-", "+", "/", "*":
-			arithmetic(input)
-		default:
-			switch true {
-			case strings.HasPrefix(input, "p"):
-				parts := strings.Split(input, " ")
-				name := parts[1]
-
-				println("move x(", x, ") to r", name, "(", r[name], ")")
-				r[name] = x
-			case strings.HasPrefix(input, "ip"):
-				parts := strings.Split(input, " ")
-				name := parts[1]
-
-				println("move r", name, "(", r[name], ") to x(", x, ")")
-				x = r[name]
-			default:
-				y = x
-				x, err = strconv.ParseFloat(input, 64)
-				if err != nil {
-					log.Println(err)
-					continue
-				}
-
-				println("load", x, "to register x")
-			}
-		}
+		parser(input)
 
 		fmt.Println("> ", x)
 	}
 }
 
-func arithmetic(input string) {
-	switch input {
-	case "+":
-		println("register y(", y, ") + register x(", x, ")")
-		x = y + x
-	case "-":
-		println("register y(", y, ") - register x(", x, ")")
-		x = y - x
-	case "/":
-		println("register y(", y, ") / register x(", x, ")")
-		x = y / x
-	case "*":
-		println("register y(", y, ") * register x(", x, ")")
-		x = y * x
-	}
-}
-
 func println(args ...interface{}) {
-	if debug {
+	if d {
 		fmt.Println(args...)
 	}
-}
-
-func dump() {
-	fmt.Println("x =", x)
-	fmt.Println("y =", y, "\n")
-	fmt.Println("0 =", r["0"])
-	fmt.Println("1 =", r["1"])
-	fmt.Println("2 =", r["2"])
-	fmt.Println("3 =", r["3"])
-	fmt.Println("4 =", r["4"])
-	fmt.Println("5 =", r["5"])
-	fmt.Println("6 =", r["6"])
-	fmt.Println("7 =", r["7"])
-	fmt.Println("8 =", r["8"])
-	fmt.Println("9 =", r["9"])
-	fmt.Println("A =", r["A"])
-	fmt.Println("B =", r["B"])
-	fmt.Println("C =", r["C"])
-	fmt.Println("D =", r["D"])
 }
