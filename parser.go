@@ -2,32 +2,37 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 	"strings"
 )
 
 func parser(input string) error {
 	switch true {
+	// commands
 	case strings.HasPrefix(input, "debug"):
 		debug()
 	case strings.HasPrefix(input, "dump"):
 		dump()
+	case strings.HasPrefix(input, "r/g"):
+		rg()
 	case strings.HasPrefix(input, "cx"):
 		clear()
 	case strings.HasPrefix(input, "xy"):
 		swap()
+	// arithmetic
 	case strings.HasPrefix(input, "-"),
 		strings.HasPrefix(input, "+"),
 		strings.HasPrefix(input, "/"),
 		strings.HasPrefix(input, "*"):
 		arithmetic(input)
+	// memory
 	case strings.HasPrefix(input, "p"):
 		save(input)
 	case strings.HasPrefix(input, "ip"):
 		load(input)
-	case strings.HasPrefix(input, "fn"):
-		function(input)
+	// functions
+	case strings.HasPrefix(input, ":"):
+		functions(input)
 	default:
 		put()
 		var err error
@@ -39,6 +44,10 @@ func parser(input string) error {
 	}
 
 	return nil
+}
+
+func rg() {
+	grad = !grad
 }
 
 func debug() {
@@ -98,62 +107,17 @@ func load(input string) {
 	x = r[name]
 }
 
-func arithmetic(input string) {
-	x1 = x
-
+func functions(input string) {
 	switch input {
-	case "+":
-		println("register y(", y, ") + register x(", x, ")")
-		y = y + x
-	case "-":
-		println("register y(", y, ") - register x(", x, ")")
-		y = y - x
-	case "/":
-		println("register y(", y, ") / register x(", x, ")")
-		y = y / x
-	case "*":
-		println("register y(", y, ") * register x(", x, ")")
-		y = y * x
+	case ":sqrt", ":x^2", ":x^y", ":1/x":
+		pow(input)
+	case ":e^x", ":lgx", ":lnx", ":10^x":
+		ten(input)
+	case ":pi", ":sin", ":cos", ":tg", ":ctg", ":arcsin", ":arccos", ":arctg", ":arcctg":
+		trigonometry(input)
+	case ":bx", ":pop", ":put":
+		stack(input)
+	case ":prg":
+
 	}
-
-	pop()
-}
-
-func function(input string) {
-	parts := strings.Split(input, " ")
-	name := parts[1]
-	println("call  function", name)
-
-	switch name {
-	case ":sqrt":
-		x1 = x
-		x = math.Sqrt(x)
-	case ":x^2":
-		x1 = x
-		x = math.Pow(x, 2)
-	case ":x^y":
-		x1 = x
-		x = math.Pow(x, y)
-	case ":1/x":
-		x1 = x
-		x = 1 / x
-	case ":bx":
-		y = x
-		x = x1
-	case ":pop":
-		pop()
-	}
-}
-
-// move to stack functions
-func put() {
-	t = z
-	z = y
-	y = x
-}
-
-func pop() {
-	x = y
-	y = z
-	z = t
 }
