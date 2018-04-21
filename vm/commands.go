@@ -1,0 +1,155 @@
+package vm
+
+var tokens = map[string]int{
+	"vp":  0x0c,
+	"cx":  0x0d,
+	"ent": 0x0e,
+
+	"+": 0x10,
+	"-": 0x11,
+	"*": 0x12,
+	"/": 0x13,
+
+	"xy": 0x14,
+
+	"f10^x":   0x15,
+	"fe^x":    0x16,
+	"flgx":    0x17,
+	"flnx":    0x18,
+	"farcsin": 0x19,
+	"farccos": 0x1a,
+	"farctg":  0x1b,
+	"fsin":    0x1c,
+	"fcos":    0x1d,
+	"ftg":     0x1e,
+	"fpi":     0x20,
+
+	"fsqrt": 0x21,
+	"fx^2":  0x22,
+	"f1/x":  0x23,
+	"fx^y":  0x24,
+
+	"fo": 0x25,
+
+	"p0":   0x40,
+	"p1":   0x41,
+	"p2":   0x42,
+	"p3":   0x43,
+	"p4":   0x44,
+	"p5":   0x45,
+	"p6":   0x46,
+	"p7":   0x47,
+	"p8":   0x48,
+	"p9":   0x49,
+	"pa":   0x4a,
+	"pb":   0x4b,
+	"pc":   0x4c,
+	"pd":   0x4d,
+	"pent": 0x4e,
+
+	"c/p":   0x50,
+	"bp":    0x51,
+	"vo":    0x52,
+	"pp":    0x53,
+	"knop":  0x54,
+	"fx!=0": 0x57,
+	"fl2":   0x58,
+	"fx>=0": 0x59,
+	"fl3":   0x5a,
+	"fl1":   0x5b,
+	"fx<0":  0x5c,
+	"fl0":   0x5d,
+	"fx=0":  0x5e,
+
+	"ip0":   0x60,
+	"ip1":   0x61,
+	"ip2":   0x62,
+	"ip3":   0x63,
+	"ip4":   0x64,
+	"ip5":   0x65,
+	"ip6":   0x66,
+	"ip7":   0x67,
+	"ip8":   0x68,
+	"ip9":   0x69,
+	"ipa":   0x6a,
+	"ipb":   0x6b,
+	"ipc":   0x6c,
+	"ipd":   0x6d,
+	"ipent": 0x6e,
+}
+
+type comamnd interface {
+	execute(vm *VirtualMachine)
+}
+
+var comands = map[int]comamnd{
+	0x0d: clearRX{},
+	0x0e: enter{},
+	0x10: addition{},
+	0x11: subtraction{},
+	0x12: multiplication{},
+	0x13: division{},
+
+	0x15: ftpowx{},
+	0x16: fepowx{},
+	0x17: flgx{},
+	0x18: flnx{},
+
+	0x19: farcsin{},
+	0x1a: farccos{},
+	0x1b: farctg{},
+	0x1c: fsin{},
+	0x1d: fcos{},
+	0x1e: ftg{},
+	0x20: fpi{},
+
+	0x21: fsqrt{},
+	0x22: fxpow2{},
+	0x23: f1x{},
+	0x24: fxpowy{},
+
+	0x25: fo{},
+	0x40: fp{"0"},
+	0x41: fp{"1"},
+	0x42: fp{"2"},
+	0x43: fp{"3"},
+	0x44: fp{"4"},
+	0x45: fp{"5"},
+	0x46: fp{"6"},
+	0x47: fp{"7"},
+	0x48: fp{"8"},
+	0x49: fp{"9"},
+	0x4a: fp{"A"},
+	0x4b: fp{"B"},
+	0x4c: fp{"C"},
+	0x4d: fp{"D"},
+
+	0x60: fip{"0"},
+	0x61: fip{"1"},
+	0x62: fip{"2"},
+	0x63: fip{"3"},
+	0x64: fip{"4"},
+	0x65: fip{"5"},
+	0x66: fip{"6"},
+	0x67: fip{"7"},
+	0x68: fip{"8"},
+	0x69: fip{"9"},
+	0x6a: fip{"A"},
+	0x6b: fip{"B"},
+	0x6c: fip{"C"},
+	0x6d: fip{"D"},
+}
+
+type clearRX struct{}
+
+func (crx clearRX) execute(vm *VirtualMachine) {
+	vm.rx = 0
+}
+
+type enter struct{}
+
+func (crx enter) execute(vm *VirtualMachine) {
+	// сохраняем прошлый результат
+	vm.save()
+	vm.put()
+}

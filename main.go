@@ -6,37 +6,8 @@ import (
 	"log"
 	"os"
 	"strings"
-)
 
-var (
-	x float64 // текущий регистр
-	y float64 // рабочий регистр
-	// стековые регистры
-	z float64
-	t float64
-
-	// регистр предыдущего результата
-	x1 float64
-
-	// регистры общего назначеия
-	r = map[string]float64{
-		"0": 0,
-		"1": 0,
-		"2": 0,
-		"3": 0,
-		"4": 0,
-		"5": 0,
-		"6": 0,
-		"7": 0,
-		"8": 0,
-		"9": 0,
-		"A": 0,
-		"B": 0,
-		"C": 0,
-		"D": 0,
-	}
-
-	d = true
+	"github.com/horechek/bz34/vm"
 )
 
 func init() {
@@ -44,6 +15,7 @@ func init() {
 }
 
 func main() {
+	machine := vm.NewVirtualMachine()
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
@@ -58,14 +30,18 @@ func main() {
 			continue
 		}
 
-		parser(input)
+		code, err := machine.Parse(input)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
 
-		fmt.Println("> ", x)
-	}
-}
+		err = machine.Execute(code)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
 
-func println(args ...interface{}) {
-	if d {
-		fmt.Println(args...)
+		fmt.Println("> ", machine.Result())
 	}
 }
