@@ -13,7 +13,7 @@
 
 ![](bz34.png)
 
-Литература
+## Литература
 
 * [Архив Кванта](http://publ.lib.ru/ARCHIVES/B/''Bibliotechka_''Kvant''/_''Bibliotechka_''Kvant''.html)
 * [Архив НЖ](https://pynop.com/nauka-i-zhizn.htm)
