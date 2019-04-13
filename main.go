@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"github.com/horechek/bz34/vm"
+	"github.com/horechek/bz34/vm/executor"
+	"github.com/horechek/bz34/vm/parser"
 )
 
 func init() {
@@ -17,6 +19,8 @@ func init() {
 func main() {
 	machine := vm.NewVirtualMachine()
 	reader := bufio.NewReader(os.Stdin)
+	parser := parser.NewParser(machine)
+	executor := executor.NewExecutor(machine)
 
 	for {
 		input, err := reader.ReadString('\n')
@@ -30,13 +34,13 @@ func main() {
 			continue
 		}
 
-		code, err := machine.Parse(input)
+		code, err := parser.Parse(input)
 		if err != nil {
 			log.Println(err)
 			continue
 		}
 
-		err = machine.Execute(code)
+		err = executor.Execute(code)
 		if err != nil {
 			log.Println(err)
 			continue

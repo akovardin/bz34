@@ -1,22 +1,28 @@
-package vm
+package tests
 
 import (
+	"github.com/horechek/bz34/vm/executor"
 	"testing"
 
+	"github.com/horechek/bz34/vm"
+	"github.com/horechek/bz34/vm/parser"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestParser10powXFunctions(t *testing.T) {
-	vm := NewVirtualMachine()
+	vm := vm.NewVirtualMachine()
+	parser := parser.NewParser(vm)
+	executor := executor.NewExecutor(vm)
+
 	inputs := []string{
 		"0.9374",
 		"f10^x",
 	}
 
 	for _, input := range inputs {
-		code, err := vm.Parse(input)
+		code, err := parser.Parse(input)
 		assert.NoError(t, err)
-		err = vm.Execute(code)
+		err = executor.Execute(code)
 		assert.NoError(t, err)
 	}
 
@@ -24,16 +30,19 @@ func TestParser10powXFunctions(t *testing.T) {
 }
 
 func TestParserEpowXFunctions(t *testing.T) {
-	vm := NewVirtualMachine()
+	vm := vm.NewVirtualMachine()
+	parser := parser.NewParser(vm)
+	executor := executor.NewExecutor(vm)
+
 	inputs := []string{
 		"3.2705",
 		"fe^x",
 	}
 
 	for _, input := range inputs {
-		code, err := vm.Parse(input)
+		code, err := parser.Parse(input)
 		assert.NoError(t, err)
-		err = vm.Execute(code)
+		err = executor.Execute(code)
 		assert.NoError(t, err)
 	}
 
@@ -41,16 +50,19 @@ func TestParserEpowXFunctions(t *testing.T) {
 }
 
 func TestParserLgFunctions(t *testing.T) {
-	vm := NewVirtualMachine()
+	vm := vm.NewVirtualMachine()
+	parser := parser.NewParser(vm)
+	executor := executor.NewExecutor(vm)
+
 	inputs := []string{
 		"0.37445",
 		"flgx",
 	}
 
 	for _, input := range inputs {
-		code, err := vm.Parse(input)
+		code, err := parser.Parse(input)
 		assert.NoError(t, err)
-		err = vm.Execute(code)
+		err = executor.Execute(code)
 		assert.NoError(t, err)
 	}
 
@@ -59,16 +71,19 @@ func TestParserLgFunctions(t *testing.T) {
 }
 
 func TestParserLnFunctions(t *testing.T) {
-	vm := NewVirtualMachine()
+	vm := vm.NewVirtualMachine()
+	parser := parser.NewParser(vm)
+	executor := executor.NewExecutor(vm)
+
 	inputs := []string{
 		"0.005776",
 		"flnx",
 	}
 
 	for _, input := range inputs {
-		code, err := vm.Parse(input)
+		code, err := parser.Parse(input)
 		assert.NoError(t, err)
-		err = vm.Execute(code)
+		err = executor.Execute(code)
 		assert.NoError(t, err)
 	}
 
