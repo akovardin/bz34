@@ -18,6 +18,7 @@ func NewParser(vm *vm.VirtualMachine) *Parser {
 }
 
 func (p *Parser) Parse(input string) (int, error) {
+	// remove this - it is part of executor
 	val, err := strconv.ParseFloat(input, 64)
 	if err == nil {
 		p.vm.Save()
