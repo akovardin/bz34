@@ -76,4 +76,6 @@ var tokens = map[string]int{
 	"ipc":   0x6c,
 	"ipd":   0x6d,
 	"ipent": 0x6e,
+
+	"k0": 0x70,
 }
