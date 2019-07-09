@@ -2,6 +2,7 @@ package vm
 
 import (
 	"fmt"
+	"log"
 	"math"
 )
 
@@ -28,6 +29,8 @@ type VirtualMachine struct {
 
 	debug bool
 	run   bool
+
+	commands map[int]Command
 }
 
 func NewVirtualMachine() *VirtualMachine {
@@ -48,6 +51,66 @@ func NewVirtualMachine() *VirtualMachine {
 			"C": 0,
 			"D": 0,
 		},
+	}
+
+	v.commands = map[int]Command{
+		0x0d: Clear{vm: v},
+		0x0e: Enter{vm: v},
+		0x10: Addition{vm: v},
+		0x11: Subtraction{vm: v},
+		0x12: Multiplication{vm: v},
+		0x13: Division{vm: v},
+
+		0x15: Ftpowx{vm: v},
+		0x16: Fepowx{vm: v},
+		0x17: Flgx{vm: v},
+		0x18: Flnx{vm: v},
+
+		0x19: Farcsin{vm: v},
+		0x1a: Farccos{vm: v},
+		0x1b: Farctg{vm: v},
+		0x1c: Fsin{vm: v},
+		0x1d: Fcos{vm: v},
+		0x1e: Ftg{vm: v},
+		0x20: Fpi{vm: v},
+
+		0x21: Fsqrt{vm: v},
+		0x22: Fxpow2{vm: v},
+		0x23: F1x{vm: v},
+		0x24: Fxpowy{vm: v},
+		0x25: Fo{vm: v},
+
+		0x40: Fp{v, "0"},
+		0x41: Fp{v, "1"},
+		0x42: Fp{v, "2"},
+		0x43: Fp{v, "3"},
+		0x44: Fp{v, "4"},
+		0x45: Fp{v, "5"},
+		0x46: Fp{v, "6"},
+		0x47: Fp{v, "7"},
+		0x48: Fp{v, "8"},
+		0x49: Fp{v, "9"},
+		0x4a: Fp{v, "A"},
+		0x4b: Fp{v, "B"},
+		0x4c: Fp{v, "C"},
+		0x4d: Fp{v, "D"},
+
+		0x60: Fip{v, "0"},
+		0x61: Fip{v, "1"},
+		0x62: Fip{v, "2"},
+		0x63: Fip{v, "3"},
+		0x64: Fip{v, "4"},
+		0x65: Fip{v, "5"},
+		0x66: Fip{v, "6"},
+		0x67: Fip{v, "7"},
+		0x68: Fip{v, "8"},
+		0x69: Fip{v, "9"},
+		0x6a: Fip{v, "A"},
+		0x6b: Fip{v, "B"},
+		0x6c: Fip{v, "C"},
+		0x6d: Fip{v, "D"},
+
+		0x70: Stop{v},
 	}
 
 	return v
@@ -152,13 +215,25 @@ func (vm *VirtualMachine) Run() {
 
 func (vm *VirtualMachine) Step() {
 	vm.run = true
-	vm.Execute()
+	if err := vm.Execute(); err != nil {
+		log.Println("error on execute", err)
+	}
 }
 
-func (vm *VirtualMachine) Execute() {
+func (vm *VirtualMachine) Execute() error {
 	instr := vm.Memory[vm.pc]
 
-	// execute_ = instr
+	cmd, ok := vm.commands[instr]
+	if !ok {
+		vm.Save()
+		vm.Put()
+		vm.RX = float64(instr)
+		vm.pc++
+		return nil
+	}
+
+	cmd.Execute()
 
 	vm.pc++
+	return nil
 }
