@@ -19,3 +19,7 @@
 * [Архив НЖ](https://pynop.com/nauka-i-zhizn.htm)
 * [Система комманд ЭКВМ](http://mk.semico.ru/tabl2.htm)
 * [Система комманд БЗ-34](http://mk.semico.ru/comb334.htm)
+
+# Как писать игрушечные виртуальные машины
+
+* [Write your Own Virtual Machine](https://justinmeiners.github.io/lc3-vm/)

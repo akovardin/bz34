@@ -18,8 +18,16 @@ type VirtualMachine struct {
 	// регистры общего назначеия
 	RR map[string]float64
 
-	Grad  bool
+	// memmory
+	Memory [98]int
+
+	Grad bool
+
+	// program counter
+	pc int
+
 	debug bool
+	run   bool
 }
 
 func NewVirtualMachine() *VirtualMachine {
@@ -50,7 +58,7 @@ func (vm *VirtualMachine) Result() float64 {
 	return vm.RX
 }
 
-func (vm *VirtualMachine) Clear() {
+func (vm *VirtualMachine) Reset() {
 	vm.Grad = false
 	vm.debug = false
 
@@ -63,6 +71,8 @@ func (vm *VirtualMachine) Clear() {
 	for name := range vm.RR {
 		vm.RR[name] = 0
 	}
+
+	vm.Memory = [98]int{}
 }
 
 func (vm *VirtualMachine) Dump() {
@@ -129,4 +139,26 @@ func (vm *VirtualMachine) Circle() {
 	vm.RZ = vm.RT
 
 	vm.RT = x
+}
+
+func (vm *VirtualMachine) Run() {
+	for {
+		vm.Step()
+		if !vm.run {
+			return
+		}
+	}
+}
+
+func (vm *VirtualMachine) Step() {
+	vm.run = true
+	vm.Execute()
+}
+
+func (vm *VirtualMachine) Execute() {
+	instr := vm.Memory[vm.pc]
+
+	// execute_ = instr
+
+	vm.pc++
 }
