@@ -95,6 +95,8 @@ func NewVirtualMachine() *VirtualMachine {
 		0x4c: Fp{v, "C"},
 		0x4d: Fp{v, "D"},
 
+		0x51: Bp{v},
+
 		0x60: Fip{v, "0"},
 		0x61: Fip{v, "1"},
 		0x62: Fip{v, "2"},

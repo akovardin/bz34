@@ -20,7 +20,7 @@ func main() {
 	machine.Memory[3] = 20
 	machine.Memory[4] = 0x10
 	machine.Memory[5] = 0x51
-	machine.Memory[6] = 0x00
+	machine.Memory[6] = 6
 	machine.Memory[7] = 0x70
 
 	machine.Run()

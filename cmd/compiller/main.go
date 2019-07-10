@@ -9,7 +9,7 @@ import (
 	"github.com/horechek/bz34/vm/parser"
 )
 
-func main()  {
+func main() {
 	parser := parser.NewParser()
 	prog := "1 2 +"
 
